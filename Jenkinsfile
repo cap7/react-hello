@@ -11,7 +11,16 @@ pipeline {
     stage('Checkout') { steps { checkout scm } }
 
     stage('Install & Test') {
-      steps { sh 'npm ci && npm run test --if-present' }
+      // Corre npm dentro de un contenedor Node
+      agent { docker { image 'node:20-alpine' } }
+      steps {
+        sh '''
+          node -v
+          npm -v
+          npm ci
+          npm run test --if-present
+        '''
+      }
     }
 
     stage('Build Image') {
