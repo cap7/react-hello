@@ -4,7 +4,7 @@ pipeline {
 
   environment {
     IMAGE_NAME = "react-hello"
-    COMPOSE_FILE = "/rayando-architecture/docker-compose.yml"
+    COMPOSE_FILE = "rayando-architecture/docker-compose.yml"
   }
 
   stages {
