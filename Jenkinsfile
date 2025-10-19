@@ -4,7 +4,7 @@ pipeline {
 
   environment {
     IMAGE_NAME = "react-hello"
-    COMPOSE_FILE = "rayando-architecture/docker-compose.yml"
+    COMPOSE_FILE = "/rayando-architecture/docker-compose.yml"
   }
 
   stages {
@@ -35,7 +35,10 @@ pipeline {
     stage('Deploy') {
       steps {
         sh '''
-          docker compose -f ${COMPOSE_FILE} up -d --no-deps --force-recreate reactapp
+          echo "Usando compose: ${COMPOSE_FILE}"
+          test -f "${COMPOSE_FILE}" || { echo "No encuentro ${COMPOSE_FILE} dentro de Jenkins"; ls -l /srv/stack; exit 2; }
+          docker compose -f "${COMPOSE_FILE}" config > /dev/null
+          docker compose -f "${COMPOSE_FILE}" up -d --no-deps --force-recreate reactapp
           docker image prune -f
         '''
       }
